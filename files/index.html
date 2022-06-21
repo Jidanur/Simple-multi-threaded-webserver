@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <h1> Memo system</h1>
+        <script>
+            function doneBeenClicked(){
+                function callBackEvent(){
+                    var obj = JSON.parse(oReq.responseText)
+                    var theDiv = document.getElementById("memo contents")
+                    list ="<br><h2> Memo contents</h2>";
+                    for(i =0;i<obj.length;i++){
+                        list += "<p>" + "<b>ID: </b>"+ obj[i]["id"] +" <b>last_modfied_by: </b>"+ obj[i]["last modified"] +" <b> Note: </b>" + obj[i]["note"] ;
+                        list += " <button type=\"button\" onclick=\"deleteMemo("+ obj[i]["id"] +") \">delele </button>" +"</p><br>"; // delete button
+                    }
+                    theDiv.innerHTML = list;
+                }
+                var oReq = new XMLHttpRequest();
+                oReq.addEventListener("load",callBackEvent);
+                oReq.open("GET","/api/memo");
+                oReq.setRequestHeader("Accept", "application/json");
+                oReq.send()
+
+            }
+            ///pushes post method to create new memo
+            function addNewMemo(){
+                var note_text = document.getElementById("newMemo").value;
+                console.log(note_text)
+                if(note_text.length >= 1){
+                    var oReq = new XMLHttpRequest();
+                    oReq.addEventListener("load",doneBeenClicked);
+                    oReq.open("POST","/api/memo");
+                    oReq.setRequestHeader("Content-Type", "application/json");
+                    oReq.send(JSON.stringify({"note":note_text}));
+                }
+                
+            }
+            ///delete function
+            function deleteMemo(id){
+                console.log(String(id))
+                var oReq = new XMLHttpRequest();
+                oReq.addEventListener("load",doneBeenClicked);
+                oReq.open("DELETE","/api/memo/"+id);
+                oReq.send();
+            }
+            document.addEventListener('DOMContentLoaded',doneBeenClicked)
+
+        </script>
+    </head>
+    
+    <body>
+        <input type ="text" name  ="note" id="newMemo"/>
+        <button type="button" onclick="addNewMemo() ">Add </button>
+        <div id='memo contents' >Memos</div>
+    </body>
+    
+</html>
