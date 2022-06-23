@@ -1,6 +1,3 @@
-#MD Jidanur Rahman
-#7895504
-#3010-A2
 
 import socket,threading,sys,os,uuid,json,random
 
